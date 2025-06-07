@@ -17,9 +17,11 @@ btf.onReceivedDataChanged(function (receivedData, changed) {
     receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, btf.getaktiviert(receivedData, btf.e3aktiviert.m0))
     receiver.selectMotor128Servo16(btf.getByte(receivedData, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor), btf.getByte(receivedData, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
     car.buzzer(btf.getSchalter(receivedData, btf.e0Schalter.b0))
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 3, receiver.selectMotorSpeed(), lcd20x4.eAlign.right)
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 7, receiver.pinServoWinkel(), lcd20x4.eAlign.right)
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 2, receiver.selectMotorSpeed(), lcd20x4.eAlign.right)
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 5, receiver.pinServoWinkel(), lcd20x4.eAlign.right)
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 11, 15, receiver.encoderCounterM0(), lcd20x4.eAlign.right)
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 11, lcd20x4.lcd20x4_text("" + car.wattmeterV(1) + "V"), lcd20x4.eAlign.right)
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 12, 15, car.wattmetermA(), lcd20x4.eAlign.right)
     car.licht_sensor(200, 300)
 })
 if (!(btf.simulator())) {
@@ -35,11 +37,20 @@ if (!(btf.simulator())) {
     )
     for (let Index = 0; Index <= 6; Index++) {
         if (!(receiver.qwiicMotorStatus(receiver.eQwiicMotorChip.ab))) {
-            lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 6, 6, Index)
+            lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 7, 7, Index)
             basic.pause(1000)
         }
     }
+    if (car.wattmeterReset(4096) && car.wattmeterakkuleer()) {
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 7, 10, lcd20x4.lcd20x4_text("Akku"))
+    }
 }
+loops.everyInterval(1000, function () {
+	
+})
+loops.everyInterval(1000, function () {
+	
+})
 loops.everyInterval(1000, function () {
 	
 })
