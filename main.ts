@@ -9,11 +9,8 @@ input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     receiver.pinRelay(false)
 })
 btf.onReceivedDataChanged(function (receivedData, changed) {
-    if (changed) {
-        receiver.selectMotorStop(true)
-    }
-    receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, btf.getaktiviert(receivedData, btf.e3aktiviert.m0))
-    receiver.selectMotor128Servo16(btf.getByte(receivedData, btf.eBufferPointer.m0, btf.eBufferOffset.b0_Motor), btf.getByte(receivedData, btf.eBufferPointer.m0, btf.eBufferOffset.b1_Servo))
+    receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
+    receiver.fahreJoystick(btf.btf_receivedBuffer19())
     car.buzzer(btf.getSchalter(receivedData, btf.e0Schalter.b0))
     zeigeStatus()
     car.licht_sensor(200, 300)
@@ -39,3 +36,14 @@ if (!(btf.simulator())) {
         lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 7, 10, lcd20x4.lcd20x4_text("Akku"))
     }
 }
+loops.everyInterval(700, function () {
+    if (btf.timeout(45000)) {
+        receiver.pinRelay(false)
+    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p0Fahren, 20000)) {
+        receiver.pinRelay(false)
+    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p0Fahren, 1000)) {
+        receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
+        car.buzzer(false)
+        car.licht(true, true)
+    }
+})
