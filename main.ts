@@ -5,10 +5,14 @@ function macheEtwas () {
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 11, lcd20x4.lcd20x4_text("" + car.wattmeterV(1) + "V"), lcd20x4.eAlign.right)
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 12, 15, car.wattmetermA(), lcd20x4.eAlign.right)
 }
-function zeigeStatus () {
+function zeigeStatus (zeigeAbstand: boolean) {
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 11, car.statuszeile0())
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 15, car.statuszeilew())
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 3, receiver.selectAbstand_cm(true), lcd20x4.eAlign.right)
+    if (zeigeAbstand) {
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 3, receiver.selectAbstand_cm(false), lcd20x4.eAlign.right)
+    } else {
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 3, lcd20x4.lcd20x4_text("aus"))
+    }
 }
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     receiver.pinRelay(false)
@@ -20,7 +24,7 @@ btf.onReceivedDataChanged(function (receivedData, changed) {
     receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
     receiver.fahreJoystick(btf.btf_receivedBuffer19())
     car.buzzer(btf.getSchalter(receivedData, btf.e0Schalter.b0))
-    zeigeStatus()
+    zeigeStatus(btf.getSensor(receivedData, btf.eBufferPointer.m0, btf.eSensor.b6Abstand))
     car.licht_sensor(200, 300)
 })
 if (!(btf.simulator())) {
@@ -46,6 +50,9 @@ if (!(btf.simulator())) {
         lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 12, 15, lcd20x4.lcd20x4_text("Akku"))
     }
 }
+basic.forever(function () {
+    receiver.buffer_raiseAbstandMotorStop(btf.btf_receivedBuffer19())
+})
 loops.everyInterval(700, function () {
     if (btf.timeout(45000)) {
         receiver.pinRelay(false)
@@ -55,6 +62,6 @@ loops.everyInterval(700, function () {
         receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
         car.buzzer(false)
         car.licht(true, true)
-        zeigeStatus()
+        zeigeStatus(true)
     }
 })
