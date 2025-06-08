@@ -5,6 +5,9 @@ function macheEtwas () {
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 11, lcd20x4.lcd20x4_text("" + car.wattmeterV(1) + "V"), lcd20x4.eAlign.right)
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 12, 15, car.wattmetermA(), lcd20x4.eAlign.right)
 }
+receiver.onEncoderEvent(function (fahren, lenken, array) {
+    receiver.selectMotor128Servo16(fahren, lenken)
+})
 function zeigeStatus (zeigeAbstand: boolean) {
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 11, car.statuszeile0())
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 15, car.statuszeilew())
@@ -55,6 +58,7 @@ if (!(btf.simulator())) {
     }
 }
 basic.forever(function () {
+    receiver.buffer_raiseEncoderEvent(btf.btf_receivedBuffer19(), btf.btf_RadioPacketTime())
     receiver.buffer_raiseAbstandMotorStop(btf.btf_receivedBuffer19())
     receiver.buffer_raiseAbstandEvent(btf.btf_receivedBuffer19())
 })
@@ -74,7 +78,10 @@ loops.everyInterval(700, function () {
     } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p1Lokal, 20000)) {
         btf.comment(btf.btf_text("Sensoren: nach 20s aus"))
         receiver.pinRelay(false)
-    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p1Lokal, 1000)) {
+    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p2Fahrplan, 60000)) {
+        btf.comment(btf.btf_text("Fahrplan: nach 60s Stop"))
+        receiver.selectMotorStop()
+    } else if (btf.timeout(2000)) {
         car.licht(true, true)
         zeigeStatus(true)
     }
