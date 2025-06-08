@@ -1,9 +1,13 @@
-function zeigeStatus () {
+function macheEtwas () {
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 2, receiver.selectMotorSpeed(), lcd20x4.eAlign.right)
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 5, receiver.pinServoWinkel(), lcd20x4.eAlign.right)
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 11, 15, receiver.encoderCounterM0(), lcd20x4.eAlign.right)
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 11, lcd20x4.lcd20x4_text("" + car.wattmeterV(1) + "V"), lcd20x4.eAlign.right)
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 12, 15, car.wattmetermA(), lcd20x4.eAlign.right)
+}
+function zeigeStatus () {
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 11, car.statuszeile0())
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 15, car.statuszeilew())
 }
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     receiver.pinRelay(false)
