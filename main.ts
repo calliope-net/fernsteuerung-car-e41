@@ -27,7 +27,9 @@ if (!(btf.simulator())) {
     false
     )
     for (let Index = 0; Index <= 6; Index++) {
-        if (!(receiver.qwiicMotorStatus(receiver.eQwiicMotorChip.ab))) {
+        if (receiver.qwiicMotorStatus(receiver.eQwiicMotorChip.ab)) {
+            break;
+        } else {
             lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 7, 7, Index)
             basic.pause(1000)
         }
@@ -41,9 +43,10 @@ loops.everyInterval(700, function () {
         receiver.pinRelay(false)
     } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p0Fahren, 20000)) {
         receiver.pinRelay(false)
-    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p0Fahren, 1000)) {
+    } else if (btf.timeout(1000)) {
         receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
         car.buzzer(false)
         car.licht(true, true)
+        zeigeStatus()
     }
 })
