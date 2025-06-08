@@ -17,9 +17,13 @@ function zeigeStatus (zeigeAbstand: boolean) {
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     receiver.pinRelay(false)
 })
+receiver.onAbstandEvent(function (abstand_Sensor, abstand_Stop, cm) {
+    receiver.buffer_Hindernis_ausweichen(btf.btf_receivedBuffer19(), abstand_Stop)
+})
 btf.onReceivedDataChanged(function (receivedData, changed) {
     if (changed) {
         receiver.selectMotorStop(true)
+        car.buzzer(false)
     }
     receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
     receiver.fahreJoystick(btf.btf_receivedBuffer19())
@@ -52,15 +56,25 @@ if (!(btf.simulator())) {
 }
 basic.forever(function () {
     receiver.buffer_raiseAbstandMotorStop(btf.btf_receivedBuffer19())
+    receiver.buffer_raiseAbstandEvent(btf.btf_receivedBuffer19())
 })
 loops.everyInterval(700, function () {
     if (btf.timeout(45000)) {
+        btf.comment(btf.btf_text("immer: nach 45s aus"))
         receiver.pinRelay(false)
     } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p0Fahren, 20000)) {
+        btf.comment(btf.btf_text("Fahren und Lenken: nach 20s aus"))
         receiver.pinRelay(false)
-    } else if (btf.timeout(1000)) {
+    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p0Fahren, 1000)) {
+        btf.comment(btf.btf_text("Fahren und Lenken: nach 1s keine Bluetooth Daten empfangen"))
         receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, false)
         car.buzzer(false)
+        car.licht(true, true)
+        zeigeStatus(true)
+    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p1Lokal, 20000)) {
+        btf.comment(btf.btf_text("Sensoren: nach 20s aus"))
+        receiver.pinRelay(false)
+    } else if (btf.timeoutReceivedBuffer(btf.e0Betriebsart.p1Lokal, 1000)) {
         car.licht(true, true)
         zeigeStatus(true)
     }
