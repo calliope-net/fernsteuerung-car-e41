@@ -8,6 +8,8 @@ function macheEtwas () {
 function zeigeStatus () {
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 11, car.statuszeile0())
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 15, car.statuszeilew())
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 3, receiver.pinGroveUltraschall_cm(), lcd20x4.eAlign.right)
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 4, 7, receiver.selectAbstand_cm(true), lcd20x4.eAlign.right)
 }
 input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     receiver.pinRelay(false)
@@ -42,7 +44,7 @@ if (!(btf.simulator())) {
         }
     }
     if (car.wattmeterReset(4096) && car.wattmeterakkuleer()) {
-        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 7, 10, lcd20x4.lcd20x4_text("Akku"))
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 12, 15, lcd20x4.lcd20x4_text("Akku"))
     }
 }
 loops.everyInterval(700, function () {
