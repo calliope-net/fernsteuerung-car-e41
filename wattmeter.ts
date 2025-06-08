@@ -58,6 +58,12 @@ namespace car { // wattmeter.ts
         return wattmeterV(1) < 7
     }
 
+    //% group="Wattmeter" advanced=true
+    //% block="Statuszeile Wattmeter" weight=1
+    export function statuszeilew() {
+        return format(wattmeterV(1), 3, eAlign.right) + "V" +
+            format(wattmetermA(), 4, eAlign.right)
+    }
 
 
     // ========== PRIVATE nur für wattmeter ==========

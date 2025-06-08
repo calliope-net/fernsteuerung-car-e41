@@ -15,8 +15,47 @@ namespace car {
     //const pin10 = DigitalPin.C10
     //export const pinSpurlinks = DigitalPin.C11     // 9V fischertechnik 128598 IR-Spursensor
 
+   /*  function zeigeStatus() {
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 2, receiver.selectMotorSpeed(), lcd20x4.eAlign.right)
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 5, receiver.pinServoWinkel(), lcd20x4.eAlign.right)
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 11, 15, receiver.encoderCounterM0(), lcd20x4.eAlign.right)
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 11, lcd20x4.lcd20x4_text("" + car.wattmeterV(1) + "V"), lcd20x4.eAlign.right)
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 12, 15, car.wattmetermA(), lcd20x4.eAlign.right)
+    } */
+
+    //% group="Text" advanced=true
+    //% block="Statuszeile 0" weight=8
+    export function statuszeile0() {
+        return format(receiver.selectMotorSpeed(), 3, eAlign.right) +
+            format(receiver.pinServoWinkel(), 3, eAlign.right) +
+            format(receiver.encoderCounterM0(), 5, eAlign.right)
+    }
+
+    
+
+    //% group="Text" advanced=true
+    //% block="format %pText || Länge %len %pAlign" weight=7
+    //% len.min=1 len.max=20 len.defl=4
+    export function format(pText: any, len?: number, pAlign?: eAlign) {
+        let text: string = convertToText(pText)
+        if (text.length > len)
+            text = text.substr(0, len)
+        else if (text.length < len && pAlign == eAlign.right)
+            text = "                    ".substr(0, len - text.length) + text
+        else if (text.length < len)
+            text = text + "                    ".substr(0, len - text.length)
+        return text
+    }
 
 
+    // ========== ENUMs
+
+    export enum eAlign {
+        //% block="linksbündig"
+        left,
+        //% block="rechtsbündig"
+        right
+    }
 
     // ========== group="Helligkeit" subcategory="Sensoren"
 
