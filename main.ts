@@ -9,6 +9,9 @@ input.onButtonEvent(Button.B, input.buttonEventClick(), function () {
     receiver.pinRelay(false)
 })
 btf.onReceivedDataChanged(function (receivedData, changed) {
+    if (changed) {
+        receiver.selectMotorStop(true)
+    }
     receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
     receiver.fahreJoystick(btf.btf_receivedBuffer19())
     car.buzzer(btf.getSchalter(receivedData, btf.e0Schalter.b0))
