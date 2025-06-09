@@ -1,16 +1,11 @@
-function macheEtwas () {
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 2, receiver.selectMotorSpeed(), lcd20x4.eAlign.right)
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 5, receiver.pinServoWinkel(), lcd20x4.eAlign.right)
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 11, 15, receiver.encoderCounterM0(), lcd20x4.eAlign.right)
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 11, lcd20x4.lcd20x4_text("" + car.wattmeterV(1) + "V"), lcd20x4.eAlign.right)
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 12, 15, car.wattmetermA(), lcd20x4.eAlign.right)
-}
 receiver.onEncoderEvent(function (fahren, lenken, array) {
     receiver.selectMotor128Servo16(fahren, lenken)
 })
 function zeigeStatus (zeigeAbstand: boolean) {
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 11, car.statuszeile0())
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 8, 15, car.statuszeilew())
+    if (gestartet) {
+        lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 11, car.statuszeile0())
+    }
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 4, 15, "" + car.statuszeile1() + car.statuszeilew())
     if (zeigeAbstand) {
         lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 1, 0, 3, receiver.selectAbstand_cm(false), lcd20x4.eAlign.right)
     } else {
@@ -33,11 +28,14 @@ btf.onReceivedDataChanged(function (receivedData, changed) {
     car.buzzer(btf.getSchalter(receivedData, btf.e0Schalter.b0))
     zeigeStatus(btf.getSensor(receivedData, btf.eBufferPointer.m0, btf.eSensor.b6Abstand))
     car.licht_sensor(200, 300)
+    gestartet = true
 })
+let gestartet = false
 if (!(btf.simulator())) {
     led.enable(false)
+    gestartet = false
     lcd20x4.initLCD(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4))
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 4, lcd20x4.lcd20x4_text("CaR 4"))
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 3, lcd20x4.lcd20x4_text("CaR"))
     storage.removeNumber(StorageSlots.s2)
     receiver.beimStart(
     receiver.eHardware.car4,
@@ -46,12 +44,12 @@ if (!(btf.simulator())) {
     65,
     false
     )
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 6, 12, "" + receiver.pinServoKorrektur() + " " + btf.hex(btf.getStorageFunkgruppe()))
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 9, "" + btf.hex(btf.getStorageFunkgruppe()) + "" + receiver.pinServoKorrektur())
     for (let Index = 0; Index <= 6; Index++) {
         if (receiver.qwiicMotorStatus(receiver.eQwiicMotorChip.ab)) {
             break;
         } else {
-            lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 14, 15, Index)
+            lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 10, 11, Index)
             basic.pause(1000)
         }
     }
