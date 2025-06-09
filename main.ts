@@ -38,18 +38,20 @@ if (!(btf.simulator())) {
     led.enable(false)
     lcd20x4.initLCD(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4))
     lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 0, 4, lcd20x4.lcd20x4_text("CaR 4"))
+    storage.removeNumber(StorageSlots.s2)
     receiver.beimStart(
     receiver.eHardware.car4,
-    90,
+    92,
     true,
     65,
     false
     )
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 6, 12, "" + receiver.pinServoKorrektur() + " " + btf.hex(btf.getStorageFunkgruppe()))
     for (let Index = 0; Index <= 6; Index++) {
         if (receiver.qwiicMotorStatus(receiver.eQwiicMotorChip.ab)) {
             break;
         } else {
-            lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 7, 7, Index)
+            lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 14, 15, Index)
             basic.pause(1000)
         }
     }
