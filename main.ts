@@ -26,7 +26,7 @@ btf.onReceivedDataChanged(function (receivedData, changed) {
     receiver.qwiicMotorChipPower(receiver.eQwiicMotorChip.ab, true)
     receiver.fahreJoystick(btf.btf_receivedBuffer19())
     car.buzzer(btf.getSchalter(receivedData, btf.e0Schalter.b0))
-    zeigeStatus(btf.getSensor(receivedData, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) || btf.isBetriebsart(receivedData, btf.e0Betriebsart.p1Lokal))
+    zeigeStatus(btf.getSensor(receivedData, btf.eBufferPointer.m0, btf.eSensor.b6Abstand) || !(btf.isBetriebsart(receivedData, btf.e0Betriebsart.p0Fahren)))
     car.licht_sensor(200, 300)
     gestartet = true
 })
