@@ -1,5 +1,5 @@
 
-namespace car {
+namespace car { // aktoren.ts
 
     const pinBuzzer = DigitalPin.P3         // 5V Grove Buzzer
     const pinLicht = DigitalPin.C7          // 5V Licht
@@ -8,7 +8,7 @@ namespace car {
     let n_buzzer = false
 
 
-    //% group="Hupe" subcategory="Aktoren"
+    //% group="Hupe"
     //% block="Hupe %pON"
     //% pON.shadow="toggleOnOff"
     export function buzzer(pON: boolean) {
@@ -20,7 +20,7 @@ namespace car {
 
 
 
-    //% group="Licht" subcategory="Aktoren"
+    //% group="Licht"
     //% block="Licht %pON || blinken %pBlink" weight=6
     //% pON.shadow="toggleOnOff" pBlink.shadow="toggleOnOff"
     export function licht(pON: boolean, pBlink = false) {
@@ -31,11 +31,11 @@ namespace car {
         pins.digitalWritePin(pinLicht, n_Licht ? 0 : 1) // an bei digitalem Wert 0
     }
 
-    //% group="Licht" subcategory="Aktoren"
+    //% group="Licht"
     //% block="Licht an ?" weight=4
     export function licht_get() { return n_Licht }
 
-    //% group="Licht" subcategory="Aktoren"
+    //% group="Licht"
     //% block="Licht aus < %aus an > %an bei Helligkeit" weight=2
     //% aus.defl=200 an.defl=300
     export function licht_sensor(aus: number, an: number) {
@@ -47,4 +47,23 @@ namespace car {
     }
 
 
-}
+
+    // ========== group="Helligkeit" subcategory="Sensoren"
+
+    const pinFototransistor = AnalogPin.P1  // GND fischertechnik 36134 Fototransistor
+
+    //% group="Helligkeit"
+    //% block="Helligkeit analog P1" weight=6
+    export function helligkeit_analog() { return pins.analogReadPin(pinFototransistor) }
+
+    // group="Helligkeit" subcategory="Sensoren"
+    // block="Helligkeit %pVergleich %analog" weight=8
+    /*  export function helligkeit_vergleich(pVergleich: eVergleich, analog: number) {
+         switch (pVergleich) {
+             case eVergleich.gt: return helligkeit_analog() >= analog
+             case eVergleich.lt: return helligkeit_analog() <= analog
+             default: return false
+         }
+     } */
+
+} // aktoren.ts
