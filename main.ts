@@ -41,10 +41,10 @@ if (!(btf.simulator())) {
     receiver.eHardware.car4,
     92,
     true,
-    65,
+    80,
     false
     )
-    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 9, "" + btf.hex(btf.getStorageFunkgruppe()) + "" + receiver.pinServoKorrektur())
+    lcd20x4.writeText(lcd20x4.lcd20x4_eADDR(lcd20x4.eADDR.LCD_20x4), 0, 4, 9, "" + btf.hex(btf.getStorageFunkgruppe()) + " " + receiver.pinServoKorrektur())
     for (let Index = 0; Index <= 6; Index++) {
         if (receiver.qwiicMotorStatus(receiver.eQwiicMotorChip.ab)) {
             break;
